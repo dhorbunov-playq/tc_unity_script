@@ -16,22 +16,22 @@ namespace TCUnityBuild.Config
 
         public Defines Defines;
 
-        public void Apply()
+        public void Apply(IReporter reporter)
         {
-            Debug.Log("Applying BuildParams");
+            reporter.Log("Applying BuildParams");
             if (!string.IsNullOrEmpty(AndroidSdk))
             {
-                Debug.Log("Android SDK path: " + AndroidSdk);
+                reporter.Log("Android SDK path: " + AndroidSdk);
                 EditorSetup.AndroidSdkRoot = AndroidSdk;
             }
             if (!string.IsNullOrEmpty(AndroidNdk))
             {
-                Debug.Log("Android NDK path: " + AndroidNdk);
+                reporter.Log("Android NDK path: " + AndroidNdk);
                 EditorSetup.AndroidNdkRoot = AndroidNdk;
             }
             if (!string.IsNullOrEmpty(Jdk))
             {
-                Debug.Log("JDK path: " + Jdk);
+                reporter.Log("JDK path: " + Jdk);
                 EditorSetup.JdkRoot = Jdk;
             }
             if (!string.IsNullOrEmpty(KeystoreName))
@@ -54,8 +54,8 @@ namespace TCUnityBuild.Config
                 PlayerSettings.Android.keyaliasPass = KeyAliasPass;
             }
 
-            Defines.Apply();
-            Debug.Log("Applying BuildParams is done!");
+            Defines.Apply(reporter);
+            reporter.Log("Applying BuildParams is done!");
         }
     }
 }

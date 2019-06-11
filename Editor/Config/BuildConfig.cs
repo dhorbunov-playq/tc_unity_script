@@ -20,14 +20,14 @@ namespace TCUnityBuild.Config
                 }
                 catch (Exception e)
                 {
-                    Debug.LogError(e);
+                    reporter.LogFail(e.Message);
                 }
             }
         }
         
-        public void ApplyBuildParams()
+        public void ApplyBuildParams(IReporter reporter)
         {
-            BuildParams.Apply();
+            BuildParams.Apply(reporter);
         }
     }
 }

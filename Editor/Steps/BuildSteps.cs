@@ -14,7 +14,7 @@ namespace TCUnityBuild.Config.Steps
         public string BuildVersion; //-buildVersion
         public bool Release; //-buildMode
 
-        private void Prepare()
+        private void Prepare(IReporter reporter)
         {
             if (BuildNumber != null)
             {
@@ -31,14 +31,14 @@ namespace TCUnityBuild.Config.Steps
                 EditorUserBuildSettings.allowDebugging = false;
                 EditorUserBuildSettings.development = false;
                 EditorUserBuildSettings.connectProfiler = false;
-                Debug.Log("Building a release version.");
+                reporter.Log("Building a release version.");
             }
         }
 
-        private void Build()
+        private void Build(IReporter reporter)
         {
             //					BuildTarget parsedBuildTarget = (BuildTarget) Enum.Parse(typeof(BuildTarget), buildTarget);
-//					Debug.Log("Parsed build target: " + parsedBuildTarget);
+//					reporter.Log("Parsed build target: " + parsedBuildTarget);
 //					MobileTextureSubtarget? parsedTextureSubtarget = null;
 ////					if (!string.IsNullOrEmpty(androidTextureCompression))
 ////						parsedTextureSubtarget = (MobileTextureSubtarget) Enum.Parse(typeof(MobileTextureSubtarget),
@@ -53,9 +53,9 @@ namespace TCUnityBuild.Config.Steps
 
         }
         
-        public static void ExecutePostSteps(BuildTarget target, string builtPath)
+        public static void ExecutePostSteps(BuildTarget target, string builtPath, IReporter reporter)
         {
-            Debug.Log("ExecutePostSteps Fetching PostBuild steps for target " + target.ToString() + ". Path: " +
+            reporter.Log("ExecutePostSteps Fetching PostBuild steps for target " + target.ToString() + ". Path: " +
                       builtPath);
             var methods = Assembly.GetExecutingAssembly()
                 .GetTypes().SelectMany(allTypes => allTypes.GetMethods(), (allTypes, method) => new {allTypes, method})
@@ -65,21 +65,21 @@ namespace TCUnityBuild.Config.Steps
                     @t.method.IsStatic)
                 .Select(@t => @t.method);
 
-            Debug.Log("Executing PostBuild steps...");
+            reporter.Log("Executing PostBuild steps...");
             foreach (var method in methods)
             {
-                Debug.Log("ExecutePostSteps calling : " + method);
+                reporter.Log("ExecutePostSteps calling : " + method);
                 try
                 {
                     method.Invoke(null, new object[] {target, builtPath});
                 }
                 catch (Exception ex)
                 {
-                    Debug.Log("ExecutePostSteps Exception !!! : " + ex);
+                    reporter.LogError("ExecutePostSteps Exception : " + ex);
                 }
             }
 
-            Debug.Log("ExecutePostSteps DONE");
+            reporter.Log("ExecutePostSteps DONE");
         }
     }
 
@@ -107,9 +107,9 @@ namespace TCUnityBuild.Config.Steps
     
     public class TestBuildStep : BuildStep
     {
-        public static void PrepareTestBuild()
+        public static void PrepareTestBuild(IReporter reporter)
         {
-            Debug.Log("Making test build!");
+            reporter.Log("Making test build!");
 
             var allTypes = Assembly.GetExecutingAssembly().GetTypes();
             var testToolBuildScriptType = allTypes
@@ -122,27 +122,26 @@ namespace TCUnityBuild.Config.Steps
 
                 if (testBuildMethod != null)
                 {
-                    Debug.Log("PrepareBuild: invoking testBuildMethod");
+                    reporter.Log("PrepareBuild: invoking testBuildMethod");
                     testBuildMethod.Invoke(null, new object[] { });
                 }
                 else
                 {
-                    Debug.Log("Method PrepareBuild was not found in type. " +
+                    reporter.Log("Method PrepareBuild was not found in type. " +
                               testToolBuildScriptType);
                 }
             }
             else
             {
-                Debug.Log("Type 'TestToolBuildScript' was not found in assembly. " +
+                reporter.Log("Type 'TestToolBuildScript' was not found in assembly. " +
                           allTypes.Aggregate("All types: ",
-                              (concatinated, type) => { return concatinated + "; " + type; }));
+                              (concatinated, type) => concatinated + "; " + type));
             }
         }
         
-        
         public override void Run(IReporter reporter)
         {
-            PrepareTestBuild();
+            PrepareTestBuild(reporter);
             throw new System.NotImplementedException("Test Build is not implemented yet.");
         }
     }

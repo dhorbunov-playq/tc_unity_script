@@ -9,7 +9,7 @@ namespace TCUnityBuild.Config
         public List<string> Add; //addDefines
         public List<string> Remove; //removeDefines
 
-        public void Apply()
+        public void Apply(IReporter reporter)
         {
 			if (Add != null && Add.Count > 0)
 			{
@@ -25,13 +25,13 @@ namespace TCUnityBuild.Config
 					if (define == "DEVELOP")
 					{
 						PlayerSettings.productName = "DEV-" + PlayerSettings.productName;
-						Debug.Log("DEVELOP Product Name changed to : " + PlayerSettings.productName);
+						reporter.Log("DEVELOP Product Name changed to : " + PlayerSettings.productName);
 					}
 
 					if (define == "STAGING")
 					{
 						PlayerSettings.productName = "STG-" + PlayerSettings.productName;
-						Debug.Log("Staging Product Name changed to : " + PlayerSettings.productName);
+						reporter.Log("Staging Product Name changed to : " + PlayerSettings.productName);
 					}
 				}
 

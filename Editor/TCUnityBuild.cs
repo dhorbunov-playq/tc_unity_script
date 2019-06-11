@@ -30,16 +30,16 @@ namespace TCUnityBuild
 
 			string buildSteps;
 
-			Dictionary<string, string> commandToValueDictionary = GetCommandLineArguments();
+			Dictionary<string, string> commandToValueDictionary = GetCommandLineArguments(reporter);
 
 			if (!commandToValueDictionary.TryGetValue(Commands.BUILD_STEPS, out buildSteps))
 			{
 				reporter.LogFail("Build method was called, but buildSteps are not found!");
-				Application.Quit();
+				EditorApplication.Exit(1);
 			}
 
 			BuildConfig buildConfig = JObject.Parse(buildSteps).ToObject<BuildConfig>();
-			buildConfig.ApplyBuildParams();
+			buildConfig.ApplyBuildParams(reporter);
 
 			reporter.Log("Android scripting symbols: " +
 			             PlayerSettings.GetScriptingDefineSymbolsForGroup(BuildTargetGroup.Android));
@@ -55,7 +55,7 @@ namespace TCUnityBuild
 		/// <summary>
 		/// Gets all the command line arguments relevant to the build process. All commands that don't have a value after them have their value at string.Empty.
 		/// </summary>
-		public static Dictionary<string, string> GetCommandLineArguments()
+		public static Dictionary<string, string> GetCommandLineArguments(IReporter reporter)
 		{
 			Dictionary<string, string> commandToValueDictionary = new Dictionary<string, string>();
 
@@ -80,7 +80,7 @@ namespace TCUnityBuild
 					}
 					else
 					{
-						Debug.LogWarning("Duplicate command line argument " + command);
+						reporter.LogWarning("Duplicate command line argument " + command);
 					}
 				}
 			}
