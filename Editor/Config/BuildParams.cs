@@ -1,6 +1,4 @@
-using Repository.TCUnityBuild.Editor;
 using UnityEditor;
-using UnityEngine;
 
 namespace TCUnityBuild.Config
 {

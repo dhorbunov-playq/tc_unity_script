@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Repository.TCUnityBuild.Editor;
 using UnityEditor;
 
 namespace TCUnityBuild.Config.Steps

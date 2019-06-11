@@ -1,6 +1,6 @@
 using UnityEditor;
 
-namespace Repository.TCUnityBuild.Editor
+namespace TCUnityBuild
 {
     public class EditorSetup {
         public static string AndroidSdkRoot {

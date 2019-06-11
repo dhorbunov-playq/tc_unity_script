@@ -1,6 +1,6 @@
 using UnityEditor;
 
-namespace PlayQ.Build
+namespace TCUnityBuild
 {
 	/// <summary>
 	/// Sets up the appropriate player settings to properly represent the game version and build number for different platforms and versions of Unity.

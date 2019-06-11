@@ -1,7 +1,6 @@
 using System;
 using Boo.Lang;
 using TCUnityBuild.Config.Steps;
-using UnityEngine;
 
 namespace TCUnityBuild.Config
 {

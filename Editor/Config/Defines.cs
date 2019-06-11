@@ -1,6 +1,5 @@
 using Boo.Lang;
 using UnityEditor;
-using UnityEngine;
 
 namespace TCUnityBuild.Config
 {

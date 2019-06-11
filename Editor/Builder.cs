@@ -6,7 +6,7 @@ using UnityEngine;
 using TCUnityBuild;
 using UnityEditor.Build.Reporting;
 
-namespace PlayQ.Build
+namespace TCUnityBuild
 {
 	public static class Builder
 	{

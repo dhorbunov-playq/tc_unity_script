@@ -4,7 +4,6 @@ using JetBrains.Annotations;
 using Newtonsoft.Json.Linq;
 using TCUnityBuild.Config;
 using UnityEditor;
-using UnityEngine;
 
 namespace TCUnityBuild
 {
