@@ -49,7 +49,7 @@ namespace TCUnityBuild
 			if (commandToValueDictionary.TryGetValue(Commands.BUILD_STEPS, out buildSteps))
 			{
 				buildConfig = JObject.Parse(buildSteps).ToObject<BuildConfig>();
-				buildConfig.BuildParams.Apply();
+				buildConfig.ApplyBuildParams();
 				
 				Debug.Log("Android scripting symbols: " +
 			          PlayerSettings.GetScriptingDefineSymbolsForGroup(BuildTargetGroup.Android));
@@ -58,6 +58,7 @@ namespace TCUnityBuild
 				Debug.Log("WebGL scripting symbols: " +
 			          PlayerSettings.GetScriptingDefineSymbolsForGroup(BuildTargetGroup.WebGL));
 
+				buildConfig.Run();
 			}
 			else
 			{

@@ -59,10 +59,7 @@ public class TCUnityBuildWindow : EditorWindow
         {
             WipMessage();
         }
-        if (Button("Performance Tests"))
-        {
-            WipMessage();
-        }
+
         GUILayout.Space(SPACE * 3);
         
         GUILayout.Label("Create Build:", labelStyle);
@@ -97,15 +94,11 @@ public class TCUnityBuildWindow : EditorWindow
 
         GUILayout.Space(SPACE * 3);
         
-//        GUILayout.Label("Params:", labelStyle);
-//        EditorGUILayout.EnumPopup();
-
-        
-        GUILayout.FlexibleSpace();
-        if (GUILayout.Button("Drop Styles"))
-        {
-            buttonStyle = null;
-        }
+//        GUILayout.FlexibleSpace();
+//        if (GUILayout.Button("Drop Styles"))
+//        {
+//            buttonStyle = null;
+//        }
         EditorGUILayout.EndScrollView();
     }
 
