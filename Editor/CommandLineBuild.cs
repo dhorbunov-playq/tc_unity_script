@@ -3,34 +3,36 @@ using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Newtonsoft.Json.Linq;
 using PlayQ.Build;
+using TCUnityBuild;
+using TCUnityBuild.Config;
 using UnityEditor;
 using UnityEngine;
 
-namespace PlayQ
+namespace TCUnityBuild
 {
 	public static class TCUnityBuild
 	{
 		private const string VERSION = "1.0.0";
+		
+		private static class Commands
+		{		
+			public const string BUILD_STEPS = "-unifiedBuildData";
+		}
 
-		private const string PublishPathCommand = "-out";
-		private const string BuildNumberCommand = "-buildNumber";
-
-		private const string BuildTargetCommand = "-target";
-		private const string AndroidSdkCommand = "-androidSDKPath";
-		private const string AndroidNdkCommand = "-androidNDKPath";
-		private const string JdkCommand = "-jdkPath";
-		private const string KeystoreNameCommand = "-keystoreName";
-		private const string KeystorePassCommand = "-keystorePass";
-		private const string KeyAliasNameCommand = "-keyaliasName";
-		private const string KeyAliasPassCommand = "-keyaliasPass";
-		private const string AddDefinesCommand = "-addDefines";
-		private const string RemoveDefinesCommand = "-removeDefines";
-		private const string BuildModeCommand = "-buildMode";
-		private const string BuildVersionCommand = "-buildVersion";
-		private const string TestBuildCommand = "-makeTestBuild";
-
+		/* FOR TESTS
+		 -runEditorTests
+		 * -editorTestsCategories	Filter editor tests by categories. Separate test categories with a comma.
+-editorTestsFilter	Filter editor tests by names. Separate test names with a comma.
+-editorTestsResultFile - Path location to place the result file. If the path is a folder, the command line uses a default file name. If not specified, it places the results in the project’s root folder.
+		 */
+		
+		//-batchmode -nographics - testools can't work
+		
 		private const char CommandStartCharacter = '-';
+
+
 
 		/// <summary>
 		/// Performs the command line build by using the passed command line arguments.
@@ -39,204 +41,78 @@ namespace PlayQ
 		{
 			Debug.Log("Build started with TC Builder v" + VERSION);
 
-			string publishPath;
-			string buildNumber;
-			string buildVersion;
-			string buildTarget;
-			string androidSdk;
-			string androidNdk;
-			string jdk;
-			string keystoreName;
-			string keystorePass;
-			string keyaliasName;
-			string keyaliasPass;
-			string definesToAdd;
-			string definesToRemove;
-			string buildMode;
-			string makeTestBuild;
+			string buildSteps;
 
 			Dictionary<string, string> commandToValueDictionary = GetCommandLineArguments();
 
-			// Extract our arguments from dictionary
-			commandToValueDictionary.TryGetValue(PublishPathCommand, out publishPath);
-			commandToValueDictionary.TryGetValue(BuildNumberCommand, out buildNumber);
-			commandToValueDictionary.TryGetValue(BuildVersionCommand, out buildVersion);
-			commandToValueDictionary.TryGetValue(BuildTargetCommand, out buildTarget);
-
-			commandToValueDictionary.TryGetValue(AndroidSdkCommand, out androidSdk);
-			commandToValueDictionary.TryGetValue(AndroidNdkCommand, out androidNdk);
-			commandToValueDictionary.TryGetValue(JdkCommand, out jdk);
-			commandToValueDictionary.TryGetValue(KeystoreNameCommand, out keystoreName);
-			commandToValueDictionary.TryGetValue(KeystorePassCommand, out keystorePass);
-			commandToValueDictionary.TryGetValue(KeyAliasNameCommand, out keyaliasName);
-			commandToValueDictionary.TryGetValue(KeyAliasPassCommand, out keyaliasPass);
-			commandToValueDictionary.TryGetValue(AddDefinesCommand, out definesToAdd);
-			commandToValueDictionary.TryGetValue(RemoveDefinesCommand, out definesToRemove);
-			commandToValueDictionary.TryGetValue(BuildModeCommand, out buildMode);
-			commandToValueDictionary.TryGetValue(TestBuildCommand, out makeTestBuild);
-
-//			var sdkPath = "";
-			if (!string.IsNullOrEmpty(androidSdk))
+			BuildConfig buildConfig;
+			if (commandToValueDictionary.TryGetValue(Commands.BUILD_STEPS, out buildSteps))
 			{
-				Debug.Log("Android SDK path: " + androidSdk);
-//				EditorSetup.AndroidSdkRoot = androidSdk;
-			}
-			else
-				Debug.Log("Android SDK path is not specified.");
-
-			if (!string.IsNullOrEmpty(androidNdk))
-			{
-				Debug.Log("Android NDK path: " + androidNdk);
-//				EditorSetup.AndroidNdkRoot = androidNdk;
-			}
-			else
-				Debug.Log("Android NDK path is not specified.");
-
-			if (!string.IsNullOrEmpty(jdk))
-			{
-				Debug.Log("JDK path: " + jdk);
-//				EditorSetup.JdkRoot = jdk;
-			}
-			else
-				Debug.Log("JDK path is not specified.");
-
-//			var cmdlineVar = "";
-			if (!string.IsNullOrEmpty(keystoreName))
-			{
-				PlayerSettings.Android.keystoreName = keystoreName;
-			}
-
-			if (!string.IsNullOrEmpty(keystorePass))
-			{
-				PlayerSettings.Android.keystorePass = keystorePass;
-			}
-
-			if (!string.IsNullOrEmpty(keyaliasName))
-			{
-				PlayerSettings.Android.keyaliasName = keyaliasName;
-			}
-
-			if (!string.IsNullOrEmpty(keyaliasPass))
-			{
-				PlayerSettings.Android.keyaliasPass = keyaliasPass;
-			}
-
-			if (!string.IsNullOrEmpty(definesToAdd))
-			{
-				var androidSettings = PlayerSettings.GetScriptingDefineSymbolsForGroup(BuildTargetGroup.Android);
-				var iosSettings = PlayerSettings.GetScriptingDefineSymbolsForGroup(BuildTargetGroup.iOS);
-				var webglSettings = PlayerSettings.GetScriptingDefineSymbolsForGroup(BuildTargetGroup.WebGL);
-				var definesList = definesToAdd.Split(',');
-				foreach (var define in definesList)
-				{
-					androidSettings = androidSettings + ";" + define;
-					iosSettings = iosSettings + ";" + define;
-					webglSettings = webglSettings + ";" + define;
-
-					if (define == "DEVELOP")
-					{
-						PlayerSettings.productName = "DEV-" + PlayerSettings.productName;
-						Debug.Log("DEVELOP Product Name changed to : " + PlayerSettings.productName);
-					}
-
-					if (define == "STAGING")
-					{
-						PlayerSettings.productName = "STG-" + PlayerSettings.productName;
-						Debug.Log("Staging Product Name changed to : " + PlayerSettings.productName);
-					}
-				}
-
-				PlayerSettings.SetScriptingDefineSymbolsForGroup(BuildTargetGroup.Android, androidSettings);
-				PlayerSettings.SetScriptingDefineSymbolsForGroup(BuildTargetGroup.iOS, iosSettings);
-				PlayerSettings.SetScriptingDefineSymbolsForGroup(BuildTargetGroup.WebGL, webglSettings);
-			}
-
-			if (!string.IsNullOrEmpty(definesToRemove))
-			{
-				var androidSettings = PlayerSettings.GetScriptingDefineSymbolsForGroup(BuildTargetGroup.Android);
-				var iosSettings = PlayerSettings.GetScriptingDefineSymbolsForGroup(BuildTargetGroup.iOS);
-				var webglSettings = PlayerSettings.GetScriptingDefineSymbolsForGroup(BuildTargetGroup.WebGL);
-				var defines = definesToRemove.Split(',');
-				foreach (var d in defines)
-				{
-					androidSettings = androidSettings.Replace(d, "");
-					iosSettings = iosSettings.Replace(d, "");
-					webglSettings = webglSettings.Replace(d, "");
-				}
-
-				PlayerSettings.SetScriptingDefineSymbolsForGroup(BuildTargetGroup.Android, androidSettings);
-				PlayerSettings.SetScriptingDefineSymbolsForGroup(BuildTargetGroup.iOS, iosSettings);
-				PlayerSettings.SetScriptingDefineSymbolsForGroup(BuildTargetGroup.WebGL, webglSettings);
-			}
-
-
-			if (!string.IsNullOrEmpty(buildMode))
-			{
-				if (buildMode == "RELEASE")
-				{
-					EditorUserBuildSettings.allowDebugging = false;
-					EditorUserBuildSettings.development = false;
-					EditorUserBuildSettings.connectProfiler = false;
-					Debug.Log("Building a release version.");
-				}
-				else
-				{
-					Debug.LogError("Unknown build mode!");
-				}
-			}
-
-			Debug.Log("Android scripting symbols: " +
+				buildConfig = JObject.Parse(buildSteps).ToObject<BuildConfig>();
+				buildConfig.BuildParams.Apply();
+				
+				Debug.Log("Android scripting symbols: " +
 			          PlayerSettings.GetScriptingDefineSymbolsForGroup(BuildTargetGroup.Android));
-			Debug.Log("iOS scripting symbols: " +
+				Debug.Log("iOS scripting symbols: " +
 			          PlayerSettings.GetScriptingDefineSymbolsForGroup(BuildTargetGroup.iOS));
-			Debug.Log("WebGL scripting symbols: " +
+				Debug.Log("WebGL scripting symbols: " +
 			          PlayerSettings.GetScriptingDefineSymbolsForGroup(BuildTargetGroup.WebGL));
 
-
-			if (!string.IsNullOrEmpty(makeTestBuild))
-			{
-				PrepareTestBuild();
 			}
-
-			try
-
+			else
 			{
-				if (!string.IsNullOrEmpty(buildNumber))
-				{
-					BundleVersionResolver.BuildNumber = int.Parse(buildNumber);
-				}
+				Debug.LogError("Build method was called, but buildSteps are not found!");
+				return;
+			}
+			
 
-				if (!string.IsNullOrEmpty(buildVersion))
-				{
-					BundleVersionResolver.PrettyVersion = buildVersion;
-				}
-
-				if (string.IsNullOrEmpty(buildTarget))
-				{
-					Debug.LogError("No target was specified for this build.");
-				}
-				else
-				{
-					BuildTarget parsedBuildTarget = (BuildTarget) Enum.Parse(typeof(BuildTarget), buildTarget);
-					Debug.Log("Parsed build target: " + parsedBuildTarget);
-					MobileTextureSubtarget? parsedTextureSubtarget = null;
-//					if (!string.IsNullOrEmpty(androidTextureCompression))
-//						parsedTextureSubtarget = (MobileTextureSubtarget) Enum.Parse(typeof(MobileTextureSubtarget),
-//							androidTextureCompression);
 //
-//					BundleVersionResolver.Setup(parsedBuildTarget);
-//					if (string.IsNullOrEmpty(bundleExclusionCommand) || !bool.Parse(bundleExclusionCommand))
-//						BuildAndBakeAssetBundles();
-
-					Builder.Build(parsedBuildTarget, publishPath, parsedTextureSubtarget);
-					ExecutePostSteps(parsedBuildTarget, publishPath);
-				}
-			}
-			catch (Exception e)
-			{
-				Debug.LogError(e.Message);
-				throw; //Rethrow the exception so that the build process stops right here.
-			}
+//
+//
+//			if (!string.IsNullOrEmpty(makeTestBuild))
+//			{
+//				PrepareTestBuild();
+//			}
+//
+//			try
+//
+//			{
+//				if (!string.IsNullOrEmpty(buildNumber))
+//				{
+//					BundleVersionResolver.BuildNumber = int.Parse(buildNumber);
+//				}
+//
+//				if (!string.IsNullOrEmpty(buildVersion))
+//				{
+//					BundleVersionResolver.PrettyVersion = buildVersion;
+//				}
+//
+//				if (string.IsNullOrEmpty(buildTarget))
+//				{
+//					Debug.LogError("No target was specified for this build.");
+//				}
+//				else
+//				{
+//					BuildTarget parsedBuildTarget = (BuildTarget) Enum.Parse(typeof(BuildTarget), buildTarget);
+//					Debug.Log("Parsed build target: " + parsedBuildTarget);
+//					MobileTextureSubtarget? parsedTextureSubtarget = null;
+////					if (!string.IsNullOrEmpty(androidTextureCompression))
+////						parsedTextureSubtarget = (MobileTextureSubtarget) Enum.Parse(typeof(MobileTextureSubtarget),
+////							androidTextureCompression);
+////
+////					BundleVersionResolver.Setup(parsedBuildTarget);
+////					if (string.IsNullOrEmpty(bundleExclusionCommand) || !bool.Parse(bundleExclusionCommand))
+////						BuildAndBakeAssetBundles();
+//
+//					Builder.Build(parsedBuildTarget, publishPath, parsedTextureSubtarget);
+//					ExecutePostSteps(parsedBuildTarget, publishPath);
+//				}
+//			}
+//			catch (Exception e)
+//			{
+//				Debug.LogError(e.Message);
+//				throw; //Rethrow the exception so that the build process stops right here.
+//			}
 		}
 
 		public static void PrepareTestBuild()
