@@ -1,9 +1,9 @@
-using NUnit.Framework.Interfaces;
+using Repository.TCUnityBuild.Editor;
 
 namespace TCUnityBuild.Config.Steps
 {
     public abstract class Step
     {
-        public abstract void Run();
+        public abstract void Run(IReporter reporter);
     }
 }

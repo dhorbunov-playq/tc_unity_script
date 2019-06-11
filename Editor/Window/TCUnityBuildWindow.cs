@@ -1,15 +1,18 @@
-﻿using UnityEditor;
+﻿using System;
+using TCUnityBuild;
+using TCUnityBuild.Config.Steps;
+using UnityEditor;
 using UnityEngine;
 
 public class TCUnityBuildWindow : EditorWindow
 {
     private const int SPACE = 5;
+    private IReporter reporter; 
     private Header header;
-    private bool groupEnabled;
-    
     private GUIStyle labelStyle;
     private GUIStyle buttonStyle;
     private Vector2 scrollPosition;
+    
     [MenuItem("Window/TC Build")]
     static void Init()
     {
@@ -20,6 +23,19 @@ public class TCUnityBuildWindow : EditorWindow
     private void OnEnable()
     {
         header = new Header();
+        reporter = new UnityReporter();
+    }
+
+    void RunStep(Step step)
+    {
+        try
+        {
+            step.Run(reporter);
+        }
+        catch (Exception e)
+        {
+            reporter.LogFail(e.Message);
+        }
     }
     
     void OnGUI()
@@ -45,19 +61,19 @@ public class TCUnityBuildWindow : EditorWindow
         GUILayout.Space(SPACE);
         if (Button("Unit Tests"))
         {
-            WipMessage();
+            RunStep(new UnitTestsStep());
         }
         if (Button("Play Mode Tests"))
         {
-            WipMessage();
+            RunStep(new PlayModeTestsStep());
         }
         if (Button("Performance Tests"))
         {
-            WipMessage();
+            RunStep(new PerformanceTestsStep());
         }
         if (Button("Smoke Tests"))
         {
-            WipMessage();
+            RunStep(new SmokeTestsStep());
         }
 
         GUILayout.Space(SPACE * 3);
@@ -66,30 +82,32 @@ public class TCUnityBuildWindow : EditorWindow
         GUILayout.Space(SPACE);
         if (Button("Android Build"))
         {
-            WipMessage();
+            RunStep(new AndroidBuildStep());
         }
         if (Button("iOS Build"))
         {
-            WipMessage();
+            RunStep(new iOSBuildStep());
         }
         if (Button("Amazone Build"))
         {
-            WipMessage();
+            RunStep(new AmazoneBuildStep());
         }
         if (Button("Test Build"))
         {
-            WipMessage();
+            RunStep(new TestBuildStep());
         }
         
+        GUILayout.Space(SPACE * 3);
+
         GUILayout.Label("Other:", labelStyle);
         GUILayout.Space(SPACE);
         if (Button("Build Asset Bundles"))
         {
-            WipMessage();
+            RunStep(new AssetBundlesStep());
         }
         if (Button("Build Unity Package"))
         {
-            WipMessage();
+            RunStep(new UnityPackageStep());
         }
 
         GUILayout.Space(SPACE * 3);
@@ -107,11 +125,6 @@ public class TCUnityBuildWindow : EditorWindow
         bool result = GUILayout.Button(text, buttonStyle, GUILayout.Height(30));
         GUILayout.Space(SPACE);
         return result;
-    }
-
-    void WipMessage()
-    {
-        EditorUtility.DisplayDialog("Work In Progress", "This functional is not supported yet.", "Ok");
     }
 
     public class Header

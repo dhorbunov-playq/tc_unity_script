@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using Newtonsoft.Json.Linq;
 using PlayQ.Build;
+using Repository.TCUnityBuild.Editor;
 using TCUnityBuild;
 using TCUnityBuild.Config;
 using UnityEditor;
@@ -39,7 +40,8 @@ namespace TCUnityBuild
 		/// </summary>
 		private static void Build()
 		{
-			Debug.Log("Build started with TC Builder v" + VERSION);
+			TcReporter reporter = new TcReporter();
+			reporter.Log("Build started with TC Builder v" + VERSION);
 
 			string buildSteps;
 
@@ -51,19 +53,18 @@ namespace TCUnityBuild
 				buildConfig = JObject.Parse(buildSteps).ToObject<BuildConfig>();
 				buildConfig.ApplyBuildParams();
 				
-				Debug.Log("Android scripting symbols: " +
+				reporter.Log("Android scripting symbols: " +
 			          PlayerSettings.GetScriptingDefineSymbolsForGroup(BuildTargetGroup.Android));
-				Debug.Log("iOS scripting symbols: " +
+				reporter.Log("iOS scripting symbols: " +
 			          PlayerSettings.GetScriptingDefineSymbolsForGroup(BuildTargetGroup.iOS));
-				Debug.Log("WebGL scripting symbols: " +
+				reporter.Log("WebGL scripting symbols: " +
 			          PlayerSettings.GetScriptingDefineSymbolsForGroup(BuildTargetGroup.WebGL));
 
-				buildConfig.Run();
+				buildConfig.Run(reporter);
 			}
 			else
 			{
-				Debug.LogError("Build method was called, but buildSteps are not found!");
-				return;
+				reporter.LogFail("Build method was called, but buildSteps are not found!");
 			}
 			
 

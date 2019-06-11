@@ -10,13 +10,13 @@ namespace TCUnityBuild.Config
         public List<Step> Steps;
         public BuildParams BuildParams;
 
-        public void Run()
+        public void Run(IReporter reporter)
         {
             foreach (var step in Steps)
             {
                 try
                 {
-                    step.Run();
+                    step.Run(reporter);
                 }
                 catch (Exception e)
                 {
@@ -24,6 +24,7 @@ namespace TCUnityBuild.Config
                 }
             }
         }
+        
         public void ApplyBuildParams()
         {
             BuildParams.Apply();

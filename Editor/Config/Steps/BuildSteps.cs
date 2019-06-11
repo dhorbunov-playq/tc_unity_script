@@ -1,3 +1,6 @@
+using UnityEngine;
+using ILogger = NUnit.Framework.Internal.ILogger;
+
 namespace TCUnityBuild.Config.Steps
 {
     public abstract class BuildStep : Step
@@ -25,31 +28,31 @@ namespace TCUnityBuild.Config.Steps
         //todo makeTestBuild
     }
 
-    public class AndroidBuild : BuildStep
+    public class AndroidBuildStep : BuildStep
     {
-        public override void Run()
+        public override void Run(IReporter reporter)
         {
             throw new System.NotImplementedException("Android Build is not implemented yet.");
         }
     }
-    public class AmazoneBuild : BuildStep
+    public class AmazoneBuildStep : BuildStep
     {
-        public override void Run()
+        public override void Run(IReporter reporter)
         {
             throw new System.NotImplementedException("Amazone Build is not implemented yet.");
         }
     }
-    public class iOSBuild : BuildStep
+    public class iOSBuildStep : BuildStep
     {
-        public override void Run()
+        public override void Run(IReporter reporter)
         {
             throw new System.NotImplementedException("iOs Build is not implemented yet.");
         }
     }
     
-    public class TestBuild : BuildStep
+    public class TestBuildStep : BuildStep
     {
-        public override void Run()
+        public override void Run(IReporter reporter)
         {
             throw new System.NotImplementedException("Test Build is not implemented yet.");
         }
