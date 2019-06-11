@@ -41,7 +41,7 @@ namespace TCUnityBuild
         }
     }
     
-    public class TcReporter : IReporter
+    public class TCReporter : IReporter
     {
         public void Log(string message)
         {
