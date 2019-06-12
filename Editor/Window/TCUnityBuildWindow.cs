@@ -117,6 +117,10 @@ public class TCUnityBuildWindow : EditorWindow
         {
             RunStep(new AmazoneBuildStep(buildPath, buildNumber, buildNumber.ToString(), false));
         }
+        if (Button("WebGl Build"))
+        {
+            RunStep(new WebGLBuildStep(buildPath, buildNumber, buildNumber.ToString(), false));
+        }
         if (Button("Test Build"))
         {
             RunStep(new TestBuildStep(buildPath, buildNumber, buildNumber.ToString(), false));

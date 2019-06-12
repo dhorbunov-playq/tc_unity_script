@@ -205,6 +205,18 @@ namespace TCUnityBuild.Config.Steps
         }
     }
     
+    public class WebGLBuildStep : BuildStep
+    {
+        public override void Run(IReporter reporter)
+        {
+            throw new System.NotImplementedException("Amazone Build is not implemented yet.");
+        }
+
+        public WebGLBuildStep(string buildPath, int? buildNumber, string buildVersion, bool release) : base(buildPath, buildNumber, buildVersion, release)
+        {
+        }
+    }
+    
     public class iOSBuildStep : BuildStep
     {
         protected override void SetupBundleVersion(int bundleVersion)

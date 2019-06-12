@@ -138,6 +138,23 @@ namespace TCUnityBuild.Config
 
                         config.Steps.Add(new iOSBuildStep(buildPath, buildNumber, buildVersion, release));
                         break;
+                    case StepTypes.CreateWebGLBuild:
+                        buildPath = step["BuildPath"].Value<string>();
+                        
+                        buildNumber = null;
+                        TryToWrite(step, "BuildNumber", ref buildNumber);
+                        
+                        buildVersion = null;
+                        TryToWrite(step, "BuildVersion", ref buildVersion);
+                        
+                        release = false;
+                        TryToWrite(step, "Release", ref release);
+                        
+                        textureCompression = null;
+                        TryToWrite(step, "TextureCompression", ref textureCompression);
+
+                        config.Steps.Add(new WebGLBuildStep(buildPath, buildNumber, buildVersion, release));
+                        break;
                     case StepTypes.CreateTestBuild:
                         buildPath = step["BuildPath"].Value<string>();
                         
@@ -179,6 +196,7 @@ namespace TCUnityBuild.Config
             CreateAndroidBuild,
             CreateAmazoneBuild,
             CreateIOsBuild,
+            CreateWebGLBuild,
             CreateTestBuild,
             
             BuildAssetBundles,
