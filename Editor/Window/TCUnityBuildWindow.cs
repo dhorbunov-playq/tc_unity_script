@@ -137,11 +137,11 @@ public class TCUnityBuildWindow : EditorWindow
 
         GUILayout.Space(SPACE * 3);
         
-        GUILayout.FlexibleSpace();
-        if (GUILayout.Button("Drop Styles"))
-        {
-            buttonStyle = null;
-        }
+//        GUILayout.FlexibleSpace();
+//        if (GUILayout.Button("Drop Styles"))
+//        {
+//            buttonStyle = null;
+//        }
         EditorGUILayout.EndScrollView();
     }
 

@@ -4,9 +4,9 @@ namespace TCUnityBuild.Config
 {
     public class BuildParams
     {
-        public string AndroidSdk; //-androidSDKPath;
-        public string AndroidNdk; //-androidNDKPath;		
-        public string Jdk; //-jdkPath;
+        public string AndroidSdkPath; //-androidSDKPath;
+        public string AndroidNdkPath; //-androidNDKPath;		
+        public string JdkPath; //-jdkPath;
         public string KeystoreName; //-keystoreName
         public string KeystorePass; //-keystorePass
         public string KeyAliasName; //-keyaliasName
@@ -17,22 +17,22 @@ namespace TCUnityBuild.Config
         public void Apply(IReporter reporter)
         {
             reporter.Log("Applying BuildParams");
-            if (!string.IsNullOrEmpty(AndroidSdk))
+            if (!string.IsNullOrEmpty(AndroidSdkPath))
             {
-                reporter.Log("Android SDK path: " + AndroidSdk);
-                SetAndroidSdkRoot(AndroidSdk);
+                reporter.Log("Android SDK path: " + AndroidSdkPath);
+                SetAndroidSdkRoot(AndroidSdkPath);
             }
 
-            if (!string.IsNullOrEmpty(AndroidNdk))
+            if (!string.IsNullOrEmpty(AndroidNdkPath))
             {
-                reporter.Log("Android NDK path: " + AndroidNdk);
-                SetAndroidNdkRoot(AndroidNdk);
+                reporter.Log("Android NDK path: " + AndroidNdkPath);
+                SetAndroidNdkRoot(AndroidNdkPath);
             }
 
-            if (!string.IsNullOrEmpty(Jdk))
+            if (!string.IsNullOrEmpty(JdkPath))
             {
-                reporter.Log("JDK path: " + Jdk);
-                SetJdkRoot(Jdk);
+                reporter.Log("JDK path: " + JdkPath);
+                SetJdkRoot(JdkPath);
             }
 
             if (!string.IsNullOrEmpty(KeystoreName))
