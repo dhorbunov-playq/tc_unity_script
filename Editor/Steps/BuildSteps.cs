@@ -1,7 +1,11 @@
 using System;
+using System.IO;
 using System.Linq;
 using System.Reflection;
+using Boo.Lang;
 using UnityEditor;
+using UnityEditor.Build.Reporting;
+using UnityEngine;
 
 namespace TCUnityBuild.Config.Steps
 {
@@ -12,16 +16,18 @@ namespace TCUnityBuild.Config.Steps
         public string BuildVersion; //-buildVersion
         public bool Release; //-buildMode
 
-        private void Prepare(IReporter reporter)
+        protected virtual void Prepare(IReporter reporter)
         {
+            Directory.CreateDirectory(BuildPath);
+            
             if (BuildNumber != null)
             {
-                BundleVersionResolver.BuildNumber = BuildNumber;
+                SetupBundleVersion(BuildNumber.Value);
             }
 
-            if (string.IsNullOrEmpty(BuildVersion))
+            if (!string.IsNullOrEmpty(BuildVersion))
             {
-                BundleVersionResolver.PrettyVersion = BuildVersion;
+                SetupPrettyVersion(BuildVersion);
             }
 
             if (Release)
@@ -29,32 +35,76 @@ namespace TCUnityBuild.Config.Steps
                 EditorUserBuildSettings.allowDebugging = false;
                 EditorUserBuildSettings.development = false;
                 EditorUserBuildSettings.connectProfiler = false;
-                reporter.Log("Building a release version.");
+                reporter.Log("Building a release version!");
             }
         }
 
-        private void Build(IReporter reporter)
+        protected virtual void SetupBundleVersion(int bundleVersion)
         {
-            //					BuildTarget parsedBuildTarget = (BuildTarget) Enum.Parse(typeof(BuildTarget), buildTarget);
-//					reporter.Log("Parsed build target: " + parsedBuildTarget);
-//					MobileTextureSubtarget? parsedTextureSubtarget = null;
-////					if (!string.IsNullOrEmpty(androidTextureCompression))
-////						parsedTextureSubtarget = (MobileTextureSubtarget) Enum.Parse(typeof(MobileTextureSubtarget),
-////							androidTextureCompression);
-////
-////					BundleVersionResolver.Setup(parsedBuildTarget);
-////					if (string.IsNullOrEmpty(bundleExclusionCommand) || !bool.Parse(bundleExclusionCommand))
-////						BuildAndBakeAssetBundles();
-//
-//					Builder.Build(parsedBuildTarget, publishPath, parsedTextureSubtarget);
-//					ExecutePostSteps(parsedBuildTarget, publishPath);
+            PlayerSettings.bundleVersion = bundleVersion.ToString();
+        }
 
+        protected virtual void SetupPrettyVersion(string prettyVersion)
+        {
+            PlayerSettings.bundleVersion = prettyVersion;
         }
         
-        public static void ExecutePostSteps(BuildTarget target, string builtPath, IReporter reporter)
+        /// <summary>
+        /// Returns a list of all the enabled scenes.
+        /// </summary>
+        private static List<string> GetEnabledScenePaths(IReporter reporter)
         {
+            List<string> scenePaths = new List<string>();
+
+            reporter.Log("Enabled Scene paths: ");
+            foreach (var scene in EditorBuildSettings.scenes)
+            {
+                if (scene.enabled)
+                {
+                    reporter.Log(scene.path);
+                    scenePaths.Add(scene.path);
+                }
+            }
+
+            return scenePaths;
+        }
+        
+        protected void Build(BuildTarget target, IReporter reporter)
+        {
+            reporter.Log("Preparing to Build.");
+            Prepare(reporter);
+            
+            reporter.Log("Switching Platform to " + target);
+            EditorUserBuildSettings.SwitchActiveBuildTarget(target);
+            
+			reporter.Log("Build started. Target: " + target);
+
+            BuildReport buildReport = BuildPipeline.BuildPlayer(GetEnabledScenePaths(reporter).ToArray(), BuildPath,
+                target, BuildOptions.None);
+            switch (buildReport.summary.result)
+            {
+                case BuildResult.Succeeded:
+                    reporter.LogSuccess("Build successful!");
+                    break;
+                case BuildResult.Cancelled:
+                    reporter.LogFail("Build was canceled!");
+                    break;
+                case BuildResult.Failed:
+                    reporter.LogError("Total errors: " + buildReport.summary.totalErrors);
+                    reporter.LogFail(
+                        "*** Error(s): Unity build player exited with errors. If you dont see any errors in the logs, go into Unity and do a manual export of the project for the current target and look into Unity console for errors.");
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException("Can't proccess build result: " + buildReport.summary.result);
+            }
+            
             reporter.Log("ExecutePostSteps Fetching PostBuild steps for target " + target.ToString() + ". Path: " +
-                      builtPath);
+                         BuildPath);
+            ExecutePostSteps(target, BuildPath, reporter);
+        }
+        
+        private static void ExecutePostSteps(BuildTarget target, string builtPath, IReporter reporter)
+        {
             var methods = Assembly.GetExecutingAssembly()
                 .GetTypes().SelectMany(allTypes => allTypes.GetMethods(), (allTypes, method) => new {allTypes, method})
                 .Where(@t =>
@@ -83,11 +133,53 @@ namespace TCUnityBuild.Config.Steps
 
     public class AndroidBuildStep : BuildStep
     {
+        public string TextureCompression;
+
+        protected override void Prepare(IReporter reporter)
+        {
+            base.Prepare(reporter);
+            if (!string.IsNullOrEmpty(TextureCompression))
+            {
+                var parsedTextureSubtarget = (MobileTextureSubtarget) Enum.Parse(typeof(MobileTextureSubtarget),
+                    TextureCompression);
+                EditorUserBuildSettings.androidBuildSubtarget = parsedTextureSubtarget;
+            }
+            
+            //Enable Gradle and Proguard
+            if (PlayerSettings.GetScriptingBackend(BuildTargetGroup.Android) == ScriptingImplementation.IL2CPP)
+            {
+                EditorUserBuildSettings.androidBuildSystem = AndroidBuildSystem.Gradle;
+
+                var templatePath = Application.dataPath + "/Plugins/Android/UnityProGuardTemplate.txt";
+                if (!File.Exists(templatePath))
+                {
+                    throw new FileNotFoundException(templatePath);
+                }
+
+                var osSpecific = SystemInfo.operatingSystemFamily == OperatingSystemFamily.Windows ? "Data" : "";
+                var installPath = EditorApplication.applicationPath + "/../" + osSpecific +
+                                  "/PlaybackEngines/AndroidPlayer/Tools/UnityProGuardTemplate.txt";
+                if (File.Exists(installPath))
+                {
+                    File.Delete(installPath);
+                }
+
+                File.Copy(templatePath, installPath);
+            }
+        }
+
         public override void Run(IReporter reporter)
         {
-            throw new System.NotImplementedException("Android Build is not implemented yet.");
+            Build(BuildTarget.Android, reporter);
+            
+        }
+        protected override void SetupBundleVersion(int bundleVersion)
+        {
+            base.SetupBundleVersion(bundleVersion);
+            PlayerSettings.Android.bundleVersionCode = bundleVersion;
         }
     }
+    
     public class AmazoneBuildStep : BuildStep
     {
         public override void Run(IReporter reporter)
@@ -95,8 +187,15 @@ namespace TCUnityBuild.Config.Steps
             throw new System.NotImplementedException("Amazone Build is not implemented yet.");
         }
     }
+    
     public class iOSBuildStep : BuildStep
     {
+        protected override void SetupBundleVersion(int bundleVersion)
+        {
+            base.SetupBundleVersion(bundleVersion);
+            PlayerSettings.iOS.buildNumber = bundleVersion.ToString();
+        }
+        
         public override void Run(IReporter reporter)
         {
             throw new System.NotImplementedException("iOs Build is not implemented yet.");
