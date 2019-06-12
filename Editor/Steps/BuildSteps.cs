@@ -16,6 +16,14 @@ namespace TCUnityBuild.Config.Steps
         public string BuildVersion; //-buildVersion
         public bool Release; //-buildMode
 
+        public BuildStep(string buildPath, int? buildNumber, string buildVersion, bool release)
+        {
+            BuildPath = buildPath;
+            BuildNumber = buildNumber;
+            BuildVersion = buildVersion;
+            Release = release;
+        }
+        
         protected virtual void Prepare(IReporter reporter)
         {
             Directory.CreateDirectory(BuildPath);
@@ -178,6 +186,11 @@ namespace TCUnityBuild.Config.Steps
             base.SetupBundleVersion(bundleVersion);
             PlayerSettings.Android.bundleVersionCode = bundleVersion;
         }
+
+        public AndroidBuildStep(string buildPath, int? buildNumber, string buildVersion, bool release, string textureCompression) : base(buildPath, buildNumber, buildVersion, release)
+        {
+            TextureCompression = textureCompression;
+        }
     }
     
     public class AmazoneBuildStep : BuildStep
@@ -185,6 +198,10 @@ namespace TCUnityBuild.Config.Steps
         public override void Run(IReporter reporter)
         {
             throw new System.NotImplementedException("Amazone Build is not implemented yet.");
+        }
+
+        public AmazoneBuildStep(string buildPath, int? buildNumber, string buildVersion, bool release) : base(buildPath, buildNumber, buildVersion, release)
+        {
         }
     }
     
@@ -199,6 +216,10 @@ namespace TCUnityBuild.Config.Steps
         public override void Run(IReporter reporter)
         {
             throw new System.NotImplementedException("iOs Build is not implemented yet.");
+        }
+
+        public iOSBuildStep(string buildPath, int? buildNumber, string buildVersion, bool release) : base(buildPath, buildNumber, buildVersion, release)
+        {
         }
     }
     
@@ -240,6 +261,10 @@ namespace TCUnityBuild.Config.Steps
         {
             PrepareTestBuild(reporter);
             throw new System.NotImplementedException("Test Build is not implemented yet.");
+        }
+
+        public TestBuildStep(string buildPath, int? buildNumber, string buildVersion, bool release) : base(buildPath, buildNumber, buildVersion, release)
+        {
         }
     }
 }

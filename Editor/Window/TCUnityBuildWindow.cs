@@ -10,6 +10,7 @@ public class TCUnityBuildWindow : EditorWindow
     private IReporter reporter; 
     private Header header;
     private GUIStyle labelStyle;
+    private GUIStyle subLabelStyle;
     private GUIStyle buttonStyle;
     private Vector2 scrollPosition;
     
@@ -37,6 +38,9 @@ public class TCUnityBuildWindow : EditorWindow
             reporter.LogFail(e.Message);
         }
     }
+
+    private string buildPath;
+    private int buildNumber;
     
     void OnGUI()
     {
@@ -49,6 +53,10 @@ public class TCUnityBuildWindow : EditorWindow
             labelStyle = new GUIStyle(GUI.skin.label);
             labelStyle.fontSize = 20;
             labelStyle.fontStyle = FontStyle.Bold;
+            
+            subLabelStyle = new GUIStyle(GUI.skin.label);
+            subLabelStyle.fontSize = 15;
+            subLabelStyle.fontStyle = FontStyle.Normal;
         }
         
         int headerWidth = header.Draw(position);
@@ -80,21 +88,38 @@ public class TCUnityBuildWindow : EditorWindow
         
         GUILayout.Label("Create Build:", labelStyle);
         GUILayout.Space(SPACE);
+        GUILayout.Label("Settings:", subLabelStyle);
+
+        GUILayout.BeginHorizontal();
+        GUILayout.Label("Build Path:", GUILayout.Width(145));
+        GUILayout.Label(buildPath, GUILayout.Width(position.width-145 - 50 - 30));
+        
+        if (GUILayout.Button("Select", GUILayout.Width(50)))
+        {
+            buildPath = EditorUtility.OpenFolderPanel("Select build path", buildPath, "build");
+        }
+        GUILayout.EndHorizontal();
+
+        buildNumber = EditorGUILayout.IntField("Build Number:", buildNumber);
+        
+        
+        GUILayout.Space(SPACE);
+        
         if (Button("Android Build"))
         {
-            RunStep(new AndroidBuildStep());
+            RunStep(new AndroidBuildStep(buildPath, buildNumber, buildNumber.ToString(), false, null));
         }
         if (Button("iOS Build"))
         {
-            RunStep(new iOSBuildStep());
+            RunStep(new iOSBuildStep(buildPath, buildNumber, buildNumber.ToString(), false));
         }
         if (Button("Amazone Build"))
         {
-            RunStep(new AmazoneBuildStep());
+            RunStep(new AmazoneBuildStep(buildPath, buildNumber, buildNumber.ToString(), false));
         }
         if (Button("Test Build"))
         {
-            RunStep(new TestBuildStep());
+            RunStep(new TestBuildStep(buildPath, buildNumber, buildNumber.ToString(), false));
         }
         
         GUILayout.Space(SPACE * 3);
@@ -112,11 +137,11 @@ public class TCUnityBuildWindow : EditorWindow
 
         GUILayout.Space(SPACE * 3);
         
-//        GUILayout.FlexibleSpace();
-//        if (GUILayout.Button("Drop Styles"))
-//        {
-//            buttonStyle = null;
-//        }
+        GUILayout.FlexibleSpace();
+        if (GUILayout.Button("Drop Styles"))
+        {
+            buttonStyle = null;
+        }
         EditorGUILayout.EndScrollView();
     }
 
