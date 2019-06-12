@@ -141,16 +141,14 @@ namespace TCUnityBuild.Config.Steps
 
     public class AndroidBuildStep : BuildStep
     {
-        public string TextureCompression;
+        public MobileTextureSubtarget? TextureCompression;
 
         protected override void Prepare(IReporter reporter)
         {
             base.Prepare(reporter);
-            if (!string.IsNullOrEmpty(TextureCompression))
+            if (TextureCompression != null)
             {
-                var parsedTextureSubtarget = (MobileTextureSubtarget) Enum.Parse(typeof(MobileTextureSubtarget),
-                    TextureCompression);
-                EditorUserBuildSettings.androidBuildSubtarget = parsedTextureSubtarget;
+                EditorUserBuildSettings.androidBuildSubtarget = TextureCompression.Value;
             }
             
             //Enable Gradle and Proguard
@@ -187,7 +185,7 @@ namespace TCUnityBuild.Config.Steps
             PlayerSettings.Android.bundleVersionCode = bundleVersion;
         }
 
-        public AndroidBuildStep(string buildPath, int? buildNumber, string buildVersion, bool release, string textureCompression) : base(buildPath, buildNumber, buildVersion, release)
+        public AndroidBuildStep(string buildPath, int? buildNumber, string buildVersion, bool release, MobileTextureSubtarget? textureCompression) : base(buildPath, buildNumber, buildVersion, release)
         {
             TextureCompression = textureCompression;
         }

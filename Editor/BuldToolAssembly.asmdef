@@ -1,12 +1,7 @@
 {
-    "name": "Tests",
-    "references": [
-        "",
-        "BuldToolAssembly"
-    ],
-    "optionalUnityReferences": [
-        "TestAssemblies"
-    ],
+    "name": "BuldToolAssembly",
+    "references": [],
+    "optionalUnityReferences": [],
     "includePlatforms": [
         "Editor"
     ],
