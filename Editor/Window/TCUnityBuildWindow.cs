@@ -183,7 +183,7 @@ public class TCUnityBuildWindow : EditorWindow
 
             Rect fullRect = new Rect(0, 0, screen.width, HEIGHT);
             EditorGUI.DrawRect(fullRect, EditorGUIUtility.isProSkin ? new Color(.3f, .3f, .3f): new Color(0.85f, 0.85f, 0.85f));
-            EditorGUI.DrawRect(new Rect(0, HEIGHT-1, screen.width, 1), Color.black);
+            EditorGUI.DrawRect(new Rect(0, HEIGHT-2, screen.width, 1), Color.black);
             
             Rect logoRect = new Rect(PADDING, PADDING, ICON_HEIGHT, ICON_HEIGHT);
             GUI.DrawTexture(logoRect, iconTexture, ScaleMode.ScaleToFit, true, 1.0F);
