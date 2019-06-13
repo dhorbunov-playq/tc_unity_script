@@ -35,12 +35,14 @@ Comming Soon
 
 ### Step 3: Steps Exequting ###
 
-Unity will be ran and call `TCUnityBuild.Build`. It will parse all steps from `-buildSteps` paramert, make setups, and run steps in order and write logs to selected log file. `TC` should listen and log by `tail` all logs from this file to "tell" `TC` about tests results, write it to `TC Build Logs` and etc. Also `TC` script should handle addition commands from `TC Unity Script`, listed bellow.
+Unity will be ran and call `TCUnityBuild.Build`. It will parse all steps from `-buildSteps` parametr, make setups, run steps in order, and write logs to selected log file. 
+`TC` should has steps according with `-buildSteps` parametrs. If build `-buildSteps` has 3 steps: `Run Unit Tests`, `Run UI Tests`, and `Make Android Build`, `TC` should has this 3 stepts too in this order for correct build proccess displaying.
+Every step on `TC` should listen and `echo` all logs from log file (for example with `tail` utility) to "tell" `TC` about tests results, write it to `TC Build Logs` and etc. Also `TC` script should handle addition commands from `TC Unity Script`, listed bellow to make transactions between `TC` steps.
 
 
 #### TC Commands ####
 
-* `[TC Unity Script - Fatal Error]` - something went wrong, for example, `-buildSteps` json has mistakes. `TC Unity Script` will close Unity and `TC` should skip all steps;
+* `[TC Unity Script - Fatal Error]` - something went wrong, for example, `-buildSteps` json has mistakes. `TC Unity Script` will close Unity and `TC` should skip all Unity-related steps;
 * `[TC Unity Script - Step Completed]` - current step was completed successfully. `TC Unity Script` run next step if it exist, or close `Unity`, if next step not exist. `TC` should close current step as `Successfull` and start next one;
 * `[TC Unity Script - Step Failed]` - current step was failed, for example build failed, becouse code has compile errors. `TC Unity Script` run next step if it exist, or close `Unity`, if next step not exist. `TC` should close current step as `Failed` and start next one;
 
