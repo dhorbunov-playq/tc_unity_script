@@ -20,7 +20,7 @@ Where:
 * `%ProjectPath%` - path to Unity project, for example `~/Documents/Repositories/CharmKing`;
 * `%LogFilePath%` - file to write logs, for example `~/Documents/Repositories/CharmKing/build/BuildLog.txt`;
 * `-executeMethod TCUnityBuild.Build` - say Unity what method it should call. `TCUnityBuild.Build` is entry point for steps runner. You shouldn't change this one;
-* `%BuildSteps%` - data for `TC Unity Script` in `json` format. It containce all needed steps, versions, keys and another data. Formating (spaces, line brakes) doesn't matter;
+* `%BuildSteps%` - data for `TC Unity Script` in `json` format. It containce all needed steps, versions, keys and another data. Formating (spaces, line brakes) doesn't matter. See [BuildSteps Format](#buildsteps-format);
 * `&` - should be to run `Unity` in separated thread to not block `TC` step code. 
 
 Also you can use any another command line arguments, if no restriction don't described in the [step description](#test-steps). For example UI Tests can't work with command line agrument `-batchmode` и `-nographic`. We recoment use additional command line arguments only if it really nessasary.
