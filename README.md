@@ -35,14 +35,12 @@ Comming Soon
 
 ### Step 3: Steps Exequting ###
 
-Unity will be ran and call `TCUnityBuild.Build`. It will parse all steps from `-buildSteps` paramert, and if it has mistake, will log `TC Unity Script Fatal Error` with error description.
-
-If all is Ok, `TCUnityBuild.Build` will run steps in order and write logs to selected log file. `TC` should listen and log by `tail` all logs from this file to "tell" `TC` about tests results, write it to `TC Build Logs` and etc. Also `TC` script should handle addition commands from `TC Unity Script`, listed bellow.
+Unity will be ran and call `TCUnityBuild.Build`. It will parse all steps from `-buildSteps` paramert, make setups, and run steps in order and write logs to selected log file. `TC` should listen and log by `tail` all logs from this file to "tell" `TC` about tests results, write it to `TC Build Logs` and etc. Also `TC` script should handle addition commands from `TC Unity Script`, listed bellow.
 
 
 #### TC Commands ####
 
-* `[TC Unity Script - Fatal Error]` - something went wrong, `TC Unity Script` will close Unity and `TC` should skip all steps;
+* `[TC Unity Script - Fatal Error]` - something went wrong, for example, `-buildSteps` json has mistakes. `TC Unity Script` will close Unity and `TC` should skip all steps;
 * `[TC Unity Script - Step Completed]` - current step was completed successfully. `TC Unity Script` run next step if it exist, or close `Unity`, if next step not exist. `TC` should close current step as `Successfull` and start next one;
 * `[TC Unity Script - Step Failed]` - current step was failed, for example build failed, becouse code has compile errors. `TC Unity Script` run next step if it exist, or close `Unity`, if next step not exist. `TC` should close current step as `Failed` and start next one;
 
