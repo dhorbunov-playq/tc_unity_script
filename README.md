@@ -6,22 +6,26 @@ Principe of work
 
 ### Step 1: Installation ###
 
-`TC Unity Script` can be added already added to project to use it for convenient build running. So `TC` should check if it's exists and copy to the project from this repository, if not. In addition it should check is `Newtonsoft.Json.dll` existed in the project becouse it possible project use `Newtonsoft.Json` libruary, but don't use `TC Unity Script`.
+`TC Unity Script` can be already added to project to use it for convenient build running (see [Work Inside Unity](#work-inside-unity)). So `TC` should check if it's exists and copy to the project from this repository, if not. In addition it should check is `Newtonsoft.Json.dll` existed in the project becouse it possible project use `Newtonsoft.Json` libruary, but don't use `TC Unity Script`.
 
 
 ### Step 2: Run Unity ###
 
 `TC` call `Unity` with command line arguments:
 ```
-"%Unity%" -projectPath "%ProjectPath%" -logfile %LogFile% -executeMethod TCUnityBuild.Build -buildSteps %BuildSteps% &
+"%Unity%" -projectPath "%ProjectPath%" -logfile "%LogFilePath%" -executeMethod TCUnityBuild.Build -buildSteps %BuildSteps% &
 ```
 Where:
 * `%Unity%` - path to unity, for example `/Applications/Unity/Unity 5.6.3.app/Contents/MacOS/Unity`;
-* `%ProjectPath%` - path to Unity project, for example "~/Documents/Repositories/CharmKing";
-* `%LogFile%` - file to write logs, for axample `~/Documents/Repositories/CharmKing/build/BuildLog.txt`;
+* `%ProjectPath%` - path to Unity project, for example `~/Documents/Repositories/CharmKing`;
+* `%LogFilePath%` - file to write logs, for example `~/Documents/Repositories/CharmKing/build/BuildLog.txt`;
 * `-executeMethod TCUnityBuild.Build` - say Unity what method it should call. `TCUnityBuild.Build` is entry point for steps runner. You shouldn't change this one;
 * `%BuildSteps%` - data for `TC Unity Script` in `json` format. It containce all needed steps, versions, keys and another data. Formating (spaces, line brakes) doesn't matter;
-* `&` - should be to run `Unity` in separated tread and not block `TC` step code. 
+* `&` - should be to run `Unity` in separated thread to not block `TC` step code. 
+
+Also you can use any another command line arguments, if no restriction don't described in the [step description](#test-steps). For example UI Tests can't work with command line agrument `-batchmode` и `-nographic`. We recoment use additional command line arguments only if it really nessasary.
+See [Unity Command Line Agruments Documentation](https://docs.unity3d.com/Manual/CommandLineArguments.html). 
+
 
 #### BuildSteps Format ####
 
@@ -47,7 +51,7 @@ If all is Ok, `TCUnityBuild.Build` will run steps in order and write logs to sel
 After all steps exequting Unity will be closed automatically. You can write additional steps in `TC`, for example to take Unity licanse back and send `Slack` notifications.
 
 
-Work inside Unity
+Work Inside Unity
 ---------------------
 
 Comming Soon
