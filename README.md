@@ -24,6 +24,7 @@ Where:
 * `&` - should be to run `Unity` in separated thread to not block `TC` step code. 
 
 Also you can use any another command line arguments, if no restriction don't described in the [step description](#test-steps). For example UI Tests can't work with command line agrument `-batchmode` и `-nographic`. We recoment use additional command line arguments only if it really nessasary.
+
 See [Unity Command Line Agruments Documentation](https://docs.unity3d.com/Manual/CommandLineArguments.html). 
 
 
