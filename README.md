@@ -37,9 +37,9 @@ If all is Ok, `TCUnityBuild.Build` will run steps in order and write logs to sel
 
 #### TC Commands ####
 
-`[TC Unity Script - Fatal Error]` - something went wrong, `TC Unity Script` will close Unity and `TC` should skip all steps;
-`[TC Unity Script - Step Completed]` - current step was completed successfully. `TC Unity Script` run next step if it exist, or close `Unity`, if next step not exist. `TC` should close current step as `Successfull` and start next one;
-`[TC Unity Script - Step Failed]` - current step was failed, for example build failed, becouse code has compile errors. `TC Unity Script` run next step if it exist, or close `Unity`, if next step not exist. `TC` should close current step as `Failed` and start next one;
+* `[TC Unity Script - Fatal Error]` - something went wrong, `TC Unity Script` will close Unity and `TC` should skip all steps;
+* `[TC Unity Script - Step Completed]` - current step was completed successfully. `TC Unity Script` run next step if it exist, or close `Unity`, if next step not exist. `TC` should close current step as `Successfull` and start next one;
+* `[TC Unity Script - Step Failed]` - current step was failed, for example build failed, becouse code has compile errors. `TC Unity Script` run next step if it exist, or close `Unity`, if next step not exist. `TC` should close current step as `Failed` and start next one;
 
 
 ### Step 4: Finishing ###
