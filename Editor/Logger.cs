@@ -8,8 +8,9 @@ namespace TCUnityBuild
         void Log(string message);
         void LogWarning(string message);
         void LogError(string message);
-        void LogSuccess(string message);
-        void LogFail(string message);
+        void LogStepSuccess();
+        void LogStepFail(string message);
+        void LogFatalFail(string message);
 
     }
     
@@ -30,14 +31,19 @@ namespace TCUnityBuild
             Debug.LogError(message);
         }
         
-        public void LogSuccess(string message)
+        public void LogStepSuccess()
         {
-            EditorUtility.DisplayDialog("Step Success", message, "Ok");
+            EditorUtility.DisplayDialog("Step Success", "Step successfully completed!", "Ok");
         }
 
-        public void LogFail(string message)
+        public void LogStepFail(string message)
         {
-            EditorUtility.DisplayDialog("Log Failed", message, "Ok");
+            EditorUtility.DisplayDialog("Step Failed", message, "Ok");
+        }
+
+        public void LogFatalFail(string message)
+        {
+            EditorUtility.DisplayDialog("Fatal Fail! ", message, "Ok");
         }
     }
     
@@ -46,30 +52,33 @@ namespace TCUnityBuild
         public void Log(string message)
         {
             Debug.Log(message);
-//            if (message.Contains("DisplayProgressbar: ")) {
-//                var status = message.Substring(20);
-//                Debug.Log("##teamcity[progressMessage '" + status + "']");
-//            }
         }
 
         public void LogWarning(string message)
         {
-            Debug.Log("##teamcity[message text='" + message + "'" + "status='WARNING']");
+            Debug.Log("##teamcity[message text='" + message + "' status='WARNING']");
         }
         public void LogError(string message)
         {
-            Debug.Log("##teamcity[message text='" + message + "'" + "status='ERROR']");
+            Debug.Log("##teamcity[message text='" + message + "' status='ERROR']");
         }
 
-        public void LogSuccess(string message)
+        public void LogStepSuccess()
         {
-            // Magic string to indicate successful build.
-            Debug.Log("Successful build ~0xDEADBEEF");        
+            Debug.Log("##teamcity[message text='Step successfully completed!' status='INFO']");
+            Debug.Log("[TC Unity Script - Step Completed]");
         }
 
-        public void LogFail(string message)
+        public void LogStepFail(string message)
         {
-            Debug.Log("##teamcity[message text='Step failed! " + message + "'" + "status='ERROR']");
+            Debug.Log("##teamcity[message text='Step failed! " + message + "' status='ERROR']");
+            Debug.Log("[TC Unity Script - Step Failed]");
+        }
+
+        public void LogFatalFail(string message)
+        {
+            Debug.Log("##teamcity[message text='Fatal fail! " + message + "' status='ERROR']");
+            Debug.Log("[TC Unity Script - Fatal Error]");
         }
     }
 }

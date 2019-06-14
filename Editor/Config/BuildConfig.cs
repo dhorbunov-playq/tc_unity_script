@@ -17,10 +17,11 @@ namespace TCUnityBuild.Config
                 try
                 {
                     step.Run(reporter);
+                    reporter.LogStepSuccess();
                 }
                 catch (Exception e)
                 {
-                    reporter.LogFail(e.Message);
+                    reporter.LogStepFail(e.Message);
                 }
             }
         }

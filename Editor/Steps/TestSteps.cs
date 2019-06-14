@@ -13,11 +13,11 @@ namespace TCUnityBuild.Config.Steps
 
     }
     
-    public class UnitTestsStep : TestsStep 
+    public class EditModeTestsStep : TestsStep 
     {
         public override void Run(IReporter reporter)
         {
-            throw new System.NotImplementedException("Unit Tests Running is not implemented yet.");
+            throw new System.NotImplementedException("Edit Mode Tests Running is not implemented yet.");
         }
     }   
     

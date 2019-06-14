@@ -32,10 +32,11 @@ public class TCUnityBuildWindow : EditorWindow
         try
         {
             step.Run(reporter);
+            reporter.LogStepSuccess();
         }
         catch (Exception e)
         {
-            reporter.LogFail(e.Message);
+            reporter.LogStepFail(e.Message);
         }
     }
 
@@ -67,9 +68,9 @@ public class TCUnityBuildWindow : EditorWindow
 
         GUILayout.Label("Run Tests:", labelStyle);
         GUILayout.Space(SPACE);
-        if (Button("Unit Tests"))
+        if (Button("Edit Mode Tests"))
         {
-            RunStep(new UnitTestsStep());
+            RunStep(new EditModeTestsStep());
         }
         if (Button("Play Mode Tests"))
         {

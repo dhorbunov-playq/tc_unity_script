@@ -92,16 +92,14 @@ namespace TCUnityBuild.Config.Steps
             switch (buildReport.summary.result)
             {
                 case BuildResult.Succeeded:
-                    reporter.LogSuccess("Build successful!");
+                    reporter.Log("Build successful!");
                     break;
                 case BuildResult.Cancelled:
-                    reporter.LogFail("Build was canceled!");
+                    throw new Exception("Build was canceled!");
                     break;
                 case BuildResult.Failed:
                     reporter.LogError("Total errors: " + buildReport.summary.totalErrors);
-                    reporter.LogFail(
-                        "*** Error(s): Unity build player exited with errors. If you dont see any errors in the logs, go into Unity and do a manual export of the project for the current target and look into Unity console for errors.");
-                    break;
+                    throw new Exception("*** Error(s): Unity build player exited with errors. If you dont see any errors in the logs, go into Unity and do a manual export of the project for the current target and look into Unity console for errors.");
                 default:
                     throw new ArgumentOutOfRangeException("Can't proccess build result: " + buildReport.summary.result);
             }

@@ -74,8 +74,8 @@ namespace TCUnityBuild.Config
 
                 switch (stepType)
                 {
-                    case StepTypes.RunUnitTests:
-                        config.Steps.Add(new UnitTestsStep());
+                    case StepTypes.RunEditModeTests:
+                        config.Steps.Add(new EditModeTestsStep());
                         break;
                     case StepTypes.RunPlayModeTests:
                         config.Steps.Add(new PlayModeTestsStep());
@@ -202,7 +202,7 @@ namespace TCUnityBuild.Config
 
         private enum StepTypes
         {
-            RunUnitTests,
+            RunEditModeTests,
             RunPlayModeTests,
             RunPerformanceTests,
             RunSmokeTests,

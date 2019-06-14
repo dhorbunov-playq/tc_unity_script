@@ -9,14 +9,14 @@ namespace Tests
     {
         
         [Test]
-        public void RunUnitTestsStepParsing()
+        public void RunEditModeTestsStepParsing()
         {
             string json = string.Empty;
             json += "{\n";
             json += "    Steps :\n";
             json += "    [\n";
             json += "        {\n";
-            json += "            Type: \"RunUnitTests\",\n";
+            json += "            Type: \"RunEditModeTests\",\n";
             json += "        },\n";
             json += "    ]\n";
             json += "}\n";
@@ -26,7 +26,7 @@ namespace Tests
             BuildConfig buildConfig = jObject.ToObject<BuildConfig>();
 
             Assert.AreEqual(buildConfig.Steps.Count, 1);
-            Assert.AreEqual(buildConfig.Steps[0].GetType(), typeof(UnitTestsStep));
+            Assert.AreEqual(buildConfig.Steps[0].GetType(), typeof(EditModeTestsStep));
         }   
         
         [Test]

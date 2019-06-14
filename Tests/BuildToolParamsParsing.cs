@@ -33,7 +33,7 @@ namespace Tests
             json += "    [\n";
             /*
             json += "        {\n";
-            json += "            Type: \"RunUnitTests\",\n";
+            json += "            Type: \"RunEditModeTests\",\n";
             json += "        },\n";
             
             json += "        {\n";

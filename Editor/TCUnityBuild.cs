@@ -13,7 +13,7 @@ namespace TCUnityBuild
 
 		private static class Commands
 		{
-			public const string BUILD_STEPS = "-unifiedBuildData";
+			public const string BUILD_STEPS = "-buildStepsData";
 		}
 
 		private const char CommandStartCharacter = '-';
@@ -33,7 +33,7 @@ namespace TCUnityBuild
 
 			if (!commandToValueDictionary.TryGetValue(Commands.BUILD_STEPS, out buildSteps))
 			{
-				reporter.LogFail("Build method was called, but buildSteps are not found!");
+				reporter.LogFatalFail("Build method was called, but buildSteps are not found!");
 				EditorApplication.Exit(1);
 			}
 
