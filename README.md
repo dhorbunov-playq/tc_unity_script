@@ -5,10 +5,10 @@ Glossary
 ---------------------
 
 * `TC` - [Team City](https://www.jetbrains.com/teamcity/) Continuous Integration;
-* `TC Unity Script` - this repository, made for execute Builds, Tests, and etc, inside `Unity` and from `TC` via command line;
+* `TC Unity Script` - this repository, made for executing Builds, Tests, and etc, inside `Unity` and from `TC` via command line;
 * `TC Step Script` - script of step on `TC`. Can make some logic or just listen logs from `TC Unity Script`.
 * `Unified Build Code` - Kotlin code from [tg-unified-build](https://github.com/PlayQ/tg-unified-build) repository, made for automatically create `TC Steps Scripts`.
-* `Unity Project` - the current game or another project to make build, run tests, or make another manipulations on `TC`.
+* `Unity Project` - the current game or another project to make build, run tests, or make other manipulations on `TC`.
 
 
 Principe of work
@@ -16,11 +16,11 @@ Principe of work
 
 ### Step 1: Installation ###
 
-`TC Step Script` enshure `TC Unity Script` is exist in `Unity Project`.
+`TC Step Script` ensure `TC Unity Script` exists in `Unity Project`.
 
-`TC Unity Script` can be already added to `Unity Project` to use it for convenient build running (see [Work Inside Unity](#work-inside-unity)). So `TC Step Script` should check if it's exists and copy it from this repository if not.
+`TC Unity Script` can be already added to `Unity Project` to use it for convenient build running (see [Work Inside Unity](#work-inside-unity)). So `TC Step Script` should check it exists and copies it from this repository if not.
 
-Also `TC Step Script` should check is `Newtonsoft.Json.dll` existed in the `Unity Project` becouse it possible `Unity Project` use `Newtonsoft.Json` libruary, but don't use `TC Unity Script`. If so, `TC Step Script` should remove dublicated `Newtonsoft.Json.dll` from `TC Unity Script` in `Unity Project`.
+Also, `TC Step Script` should check is `Newtonsoft.Json.dll` existed in the `Unity Project` because it possible `Unity Project` use `Newtonsoft.Json` library, but don't use `TC Unity Script`. If so, `TC Step Script` should remove duplicated `Newtonsoft.Json.dll` from `TC Unity Script` in `Unity Project`.
 
 
 ### Step 2: Run Unity ###
@@ -33,20 +33,20 @@ Where:
 * `%Unity%` - path to `Unity`, for example `/Applications/Unity/Unity 5.6.3.app/Contents/MacOS/Unity`;
 * `%ProjectPath%` - path to `Unity Project`, for example `~/Documents/Repositories/CharmKing`;
 * `%LogFilePath%` - file to write logs, for example `~/Documents/Repositories/CharmKing/build/BuildLog.txt`;
-* `-executeMethod TCUnityBuild.Build` - say `Unity` which method it should call. `TCUnityBuild.Build` is entry point for `TC Unity Script` steps runner. You shouldn't change this one;
-* `%BuildSteps%` - data for `TC Unity Script` in `json` format. It containce all needed steps, versions, keys and another data. Formating (spaces, line brakes) doesn't matter. See [BuildStepsData Format](#buildstepsdata-format);
-* `&` - should be to run `Unity` in separated thread to not block `TC Step Script` code.
+* `-executeMethod TCUnityBuild.Build` - say `Unity` which method it should call. `TCUnityBuild.Build` is the entry point for `TC Unity Script` steps runner. You shouldn't change this one;
+* `%BuildSteps%` - data for `TC Unity Script` in `json` format. It contains all the needed steps, versions, keys, and other data. Formatting (spaces, line brakes) doesn't matter. See [BuildStepsData Format](#buildstepsdata-format);
+* `&` - should be to run `Unity` in the separated thread to not block `TC Step Script` code.
 
-Also you can use any another `Unity` command line arguments, if no restriction don't described in the [step description](#test-steps). For example UI Tests can't work with command line agrument `-batchmode` и `-nographic`. We recomend use additional command line arguments only if it really nessasary.
+Also you can use any another Unity command line arguments if no restriction doesn't describe in the step description. For example, UI Tests can't work with command line arguments `-batchmode` and `-nographic`. We recommend using additional command line arguments only if it really necessary.
 
-See [Unity Command Line Agruments Documentation](https://docs.unity3d.com/Manual/CommandLineArguments.html). 
+See [Unity Command Line Arguments Documentation](https://docs.unity3d.com/Manual/CommandLineArguments.html). 
 
 
 #### BuildStepsData Format ####
 
 `Build Steps Data` set in Json format. It has 2 root nodes: `BuildParams` and `Steps`. 
 
-`BuildParams` apply on start of `TCUnityBuild` work. All fields are optional. Possible settings:
+`BuildParams` apply on the start of `TCUnityBuild` work. All fields are optional. Possible settings:
 * `AndroidSdkPath` - path to AndroidSdk folder;
 * `AndroidNdkPath` - path to AndroidNdk folder;
 * `JdkPath` - path to Jdk folder;
@@ -58,7 +58,7 @@ See [Unity Command Line Agruments Documentation](https://docs.unity3d.com/Manual
   * `Add` - list of defines to add to `Unity Project`;
   * `Remove` - list of defines to remove from `Unity Project`.
 
-Node `Steps` contains list of steps to run. Each step has requried field `Type` (to edentify step type) and any number of build step parametrs. See [Test Steps](#test-steps) to get information about required and optional parametrs for different steps types.
+Node `Steps` contains a list of steps to run. Each step has required field `Type` (to identify step type) and any number of build step parameters. See [Test Steps](#test-steps) to get information about required and optional parameters for different steps types.
 
 Example of `BuildStepsData`:
 ```
@@ -108,11 +108,11 @@ Example of `BuildStepsData`:
 
 ### Step 3: Steps Exequting ###
 
-Unity will be ran and call `TCUnityBuild.Build`. It will parse all steps from `-buildStepsData` parametr, make setups, run steps in order, and write logs to selected log file. 
+Unity will be ran and call `TCUnityBuild.Build`. It will parse all steps to `-buildStepsData` parameters, make setups, run steps in order, and write logs to selected log file. 
 
-`Unified Build Code` should generate `TC` steps according with `-buildStepsData` parametrs. If build `-buildStepsData` has 3 steps: `Run Unit Tests`, `Run UI Tests`, and `Make Android Build`, `TC` should has this 3 stepts too in this order for correct build proccess displaying.
+`Unified Build Code` should generate `TC` steps according with `-buildStepsData` parametrs. If build `-buildStepsData` has 3 steps: `Run Unit Tests`, `Run UI Tests`, and `Make Android Build`, `TC` should has this 3 steps too in this order for correct build process displaying.
 
-Every step on `TC Step Script` should listen and `echo` all logs from log file (for example with `tail` utility) to "tell" `TC` about tests results, write it to `TC Build Logs` and etc. Also `TC Step Script` should handle addition commands from `TC Unity Script`, listed bellow, to make transactions between `TC` steps.
+Every step on `TC Step Script` should listen and `echo` all logs from the log file (for example with `tail` utility) to "tell" `TC` about tests results, write it to `TC Build Logs` and etc. Also, `TC Step Script` should handle addition commands from `TC Unity Script`, listed below, to make transactions between `TC` steps.
 
 
 #### TC Commands ####
