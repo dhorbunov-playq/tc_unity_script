@@ -44,9 +44,9 @@ See [Unity Command Line Agruments Documentation](https://docs.unity3d.com/Manual
 
 #### BuildStepsData Format ####
 
-Build Steps Data set in Json format. It has 2 root nodes: `BuildParams` and `Steps`. 
+`Build Steps Data` set in Json format. It has 2 root nodes: `BuildParams` and `Steps`. 
 
-`BuildParams` apply on start of `TCUnityBuild` work. All of it is optional. Possible params:
+`BuildParams` apply on start of `TCUnityBuild` work. All fields are optional. Possible settings:
 * `AndroidSdkPath` - path to AndroidSdk folder;
 * `AndroidNdkPath` - path to AndroidNdk folder;
 * `JdkPath` - path to Jdk folder;
@@ -54,14 +54,14 @@ Build Steps Data set in Json format. It has 2 root nodes: `BuildParams` and `Ste
 * `KeystorePass` - Keystore Pass for [PlayerSettings.Android.keystorePass](https://docs.unity3d.com/ScriptReference/PlayerSettings.Android-keystorePass.html);
 * `KeyAliasName` - Keyalias Name for [PlayerSettings.Android.keyaliasName](https://docs.unity3d.com/ScriptReference/PlayerSettings.Android-keyaliasName.html);
 * `KeyAliasPass` - Keyalias Pass for [PlayerSettings.Android.keyaliasPass](https://docs.unity3d.com/ScriptReference/PlayerSettings.Android-keyaliasPass.html);
-* `Defines` - contains to nodes: `Add` and `Remove`:
+* `Defines` - contains two nodes:
   * `Add` - list of defines to add to `Unity Project`;
-  * `Remove` - list of defines to Remove from `Unity Project`.
+  * `Remove` - list of defines to remove from `Unity Project`.
 
-Node `Steps` contains list of steps to Run. Each step should has field `Type` to edentify step type and any number of build step parametrs (see [Test Steps](#test-steps) to get information about required and optional parametrs of different steps types).
+Node `Steps` contains list of steps to run. Each step has requried field `Type` (to edentify step type) and any number of build step parametrs. See [Test Steps](#test-steps) to get information about required and optional parametrs for different steps types.
 
 Example of `BuildStepsData`:
-```json
+```
 {
   BuildParams:
   {
