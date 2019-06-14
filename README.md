@@ -118,13 +118,13 @@ Every step on `TC Step Script` should listen and `echo` all logs from the log fi
 #### TC Commands ####
 
 * `[TC Unity Script - Fatal Error]` - something went wrong, for example, `-buildStepsData` json has mistakes. `TC Unity Script` will close `Unity` and current `TC Step Script` should skip all another Unity-related `TC` steps;
-* `[TC Unity Script - Step Completed]` - current step was completed successfully. `TC Unity Script` run next step if it exist, or close `Unity`, if next step not exist. `TC Step Script` should close current step as `Successfull` and start the next one;
-* `[TC Unity Script - Step Failed]` - current step was failed, for example build failed, becouse code has compile errors. `TC Unity Script` run next step if it exist, or close `Unity`, if next step not exist. `TC Step Script` should close current step as `Failed` and start next one;
+* `[TC Unity Script - Step Completed]` - current step was completed successfully. `TC Unity Script` runs next step if it exists, or close `Unity`, if next step not exist. `TC Step Script` should close the current step as `Successful` and start the next one;
+* `[TC Unity Script - Step Failed]` - current step was failed, for example, build failed, because the code has compile errors. `TC Unity Script` runs next step if it exists, or close `Unity`, if next step not exist. `TC Step Script` should close the current step as `Failed` and start next one;
 
 
 ### Step 4: Finishing ###
 
-After all steps exequting `TC Unity Script` will close `Unity`. You can write additional `TC Step Script`, for example to take `Unity` licanse back and send `Slack` notifications.
+After all steps executing `TC Unity Script` will close `Unity`. You can write additional `TC Step Script`, for example, to take `Unity` license back and send `Slack` notifications.
 
 
 Test Steps
@@ -134,49 +134,49 @@ Test Steps
 
 #### Edit Mode Tests ####
 
-Comming Soon...
+Coming Soon...
 
 
 #### Play Mode Tests ####
 
-Comming Soon...
+Coming Soon...
 
 
 #### Performance Tests ####
 
-Comming Soon...
+Coming Soon...
 
 
 #### Smoke Tests ####
 
-Comming Soon...
+Coming Soon...
 
 
 ### Create Build ###
 
 #### Android Build ####
 
-Comming Soon...
+Coming Soon...
 
 
 #### iOS  Build ####
 
-Comming Soon...
+Coming Soon...
 
 
 #### Amazone Build ####
 
-Comming Soon...
+Coming Soon...
 
 
 #### WebGL Build ####
 
-Comming Soon...
+Coming Soon...
 
 
 #### Test Build ####
 
-Comming Soon...
+Coming Soon...
 
 
 
@@ -184,15 +184,15 @@ Comming Soon...
 
 #### Build Asset Bundles ####
 
-Comming Soon...
+Coming Soon...
 
 
 #### Build Unity Package ####
 
-Comming Soon...
+Coming Soon...
 
 
 Work Inside Unity
 ---------------------
 
-Comming Soon
+Coming Soon
