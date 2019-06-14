@@ -68,14 +68,72 @@ Every step on `TC Step Script` should listen and `echo` all logs from log file (
 After all steps exequting `TC Unity Script` will close `Unity`. You can write additional `TC Step Script`, for example to take `Unity` licanse back and send `Slack` notifications.
 
 
+Test Steps
+---------------------
+
+### Run Tests ###
+
+#### Edit Mode Tests ####
+
+Comming Soon...
+
+
+#### Play Mode Tests ####
+
+Comming Soon...
+
+
+#### Performance Tests ####
+
+Comming Soon...
+
+
+#### Smoke Tests ####
+
+Comming Soon...
+
+
+### Create Build ###
+
+#### Android Build ####
+
+Comming Soon...
+
+
+#### iOS  Build ####
+
+Comming Soon...
+
+
+#### Amazone Build ####
+
+Comming Soon...
+
+
+#### WebGL Build ####
+
+Comming Soon...
+
+
+#### Test Build ####
+
+Comming Soon...
+
+
+
+### Other ###
+
+#### Build Asset Bundles ####
+
+Comming Soon...
+
+
+#### Build Unity Package ####
+
+Comming Soon...
+
+
 Work Inside Unity
 ---------------------
 
 Comming Soon
-
-
-Test Steps
----------------------
-
-Comming Soon
-
