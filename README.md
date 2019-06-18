@@ -16,11 +16,11 @@ Principe of work
 
 ### Step 1: Installation ###
 
-`TC Step Script` ensure `TC Unity Script` exists in `Unity Project`.
+`TC Step Script` ensures `TC Unity Script` exists in `Unity Project`.
 
-`TC Unity Script` can be already added to `Unity Project` to use it for convenient build running (see [Work Inside Unity](#work-inside-unity)). So `TC Step Script` should check it exists and copies it from this repository if not.
+`TC Unity Script` can be already added to `Unity Project` to use it for convenient build running (see [Work Inside Unity](#work-inside-unity)). So `TC Step Script` should check it's existence and copies it from this repository if not present.
 
-Also, `TC Step Script` should check is `Newtonsoft.Json.dll` existed in the `Unity Project` because it possible `Unity Project` use `Newtonsoft.Json` library, but don't use `TC Unity Script`. If so, `TC Step Script` should remove duplicated `Newtonsoft.Json.dll` from `TC Unity Script` in `Unity Project`.
+Also, what `TC Step Script` should check is file `Newtonsoft.Json.dll` existence in the `Unity Project` directory, because it possible that `Unity Project` uses `Newtonsoft.Json` library, but doesn't `TC Unity Script`. If so, `TC Step Script` should remove duplicated `Newtonsoft.Json.dll` from `TC Unity Script` in `Unity Project`.
 
 
 ### Step 2: Run Unity ###
